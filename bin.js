@@ -1,4 +1,5 @@
-import { main } from "./index";
+#!/usr/bin/env node
+const { main } = require("./dist");
 
 const args = process.argv.slice(2);
 

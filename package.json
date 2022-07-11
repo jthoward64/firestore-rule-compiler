@@ -1,12 +1,14 @@
 {
   "name": "firestore-rule-compiler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
+  "repository": "github:tajetaje/Firestore-Rule-Compiler",
   "main": "dist/index.js",
-  "bin": "dist/bin.js",
+  "bin": "./bin.js",
   "scripts": {
     "start": "node dist/bin.js",
-    "build": "tsc && cp-cli src/rules/mustache dist/rules/mustache",
+    "build": "tsc && cp-cli src/rules/mustache dist/rules/mustache && cp-cli src/schema/schema.json dist/schema/schema.json",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Tag Howard",
@@ -25,5 +27,9 @@
     "cp-cli": "^2.0.0",
     "firebase": "^9.9.0",
     "firebase-tools": "^11.2.1"
-  }
+  },
+  "files": [
+    "dist/**/*",
+    "bin.js"
+  ]
 }
