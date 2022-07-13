@@ -1,8 +1,10 @@
 match /{{collectionPath}}/{{=<% %>=}}{<%wildcardName%><%={{ }}=%>{{#isWildCardRecursive}}=**{{/isWildCardRecursive}}} {
-  {{#rules}}
+{{#rules}}
   {{.}}
-  {{/rules}}
-  {{#children}}
+{{/rules}}
+
+{{#children}}
   {{> match}}
-  {{/children}}
+
+{{/children}}
 }

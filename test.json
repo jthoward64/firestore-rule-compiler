@@ -1,0 +1,98 @@
+{
+  "topLevelMatchPath": "/databases/{database}/documents",
+  "matches": [
+    {
+      "wildcardName": "document",
+      "collectionPath": "events",
+      "isWildCardRecursive": false,
+      "allowRules": [
+        {
+          "methods": [
+            "read",
+            "write"
+          ]
+        }
+      ],
+      "children": [
+        {
+          "collectionPath": "secret",
+          "wildcardName": "secret",
+          "isWildCardRecursive": false,
+          "allowRules": [
+            {
+              "methods": [
+                "read"
+              ]
+            }
+          ]
+        }
+      ],
+      "structureRules": [
+        {
+          "field": "address",
+          "type": [
+            "string"
+          ],
+          "required": false
+        },
+        {
+          "field": "title",
+          "type": [
+            "string"
+          ],
+          "required": true
+        },
+        {
+          "field": "description",
+          "type": [
+            "string"
+          ],
+          "required": false
+        },
+        {
+          "field": "startTime",
+          "type": [
+            "timestamp"
+          ],
+          "required": true
+        },
+        {
+          "field": "endTime",
+          "type": [
+            "timestamp"
+          ]
+        },
+        {
+          "field": "position",
+          "type": [
+            "latlng"
+          ]
+        },
+        {
+          "field": "image",
+          "type": [
+            "map"
+          ]
+        },
+        {
+          "field": "image.uri",
+          "type": [
+            "string"
+          ]
+        },
+        {
+          "field": "image.width",
+          "type": [
+            "number"
+          ]
+        },
+        {
+          "field": "image.height",
+          "type": [
+            "number"
+          ]
+        }
+      ]
+    }
+  ]
+}

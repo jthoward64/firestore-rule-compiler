@@ -136,10 +136,14 @@ export function specifyMatch(match: Match): Match {
       ({
         ...rule,
         methods: rule.methods.flatMap((method) => {
-          if (method === RuleMethod.read) {
-            return [RuleMethod.get, RuleMethod.list];
-          } else if (method === RuleMethod.write) {
-            return [RuleMethod.create, RuleMethod.update, RuleMethod.delete];
+          if ((match.children?.length ?? 0) > 0) {
+            if (method === RuleMethod.read) {
+              return [RuleMethod.get, RuleMethod.list];
+            } else if (method === RuleMethod.write) {
+              return [RuleMethod.create, RuleMethod.update, RuleMethod.delete];
+            } else {
+              return [method];
+            }
           } else {
             return [method];
           }

@@ -1,0 +1,22 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /events/{document} {
+      allow get;
+      allow list;
+      allow create: if getOr(request, 'address', '') is string && request.resource.data.title is string && getOr(request, 'description', '') is string && request.resource.data.startTime is timestamp && getOr(request, 'endTime', timestamp.date(2000, 1, 1)) is timestamp && getOr(request, 'position', latlng.value(0,0)) is latlng && getOr(request, 'image', {}) is map && getOr(request, 'image.uri', '') is string && getOr(request, 'image.width', 0) is number && getOr(request, 'image.height', 0) is number && request.resource.data.keys().hasAll(['title', 'startTime']);
+      allow update: if getOr(request, 'address', '') is string && getOr(request, 'title', '') is string && getOr(request, 'description', '') is string && getOr(request, 'startTime', timestamp.date(2000, 1, 1)) is timestamp && getOr(request, 'endTime', timestamp.date(2000, 1, 1)) is timestamp && getOr(request, 'position', latlng.value(0,0)) is latlng && getOr(request, 'image', {}) is map && getOr(request, 'image.uri', '') is string && getOr(request, 'image.width', 0) is number && getOr(request, 'image.height', 0) is number;
+      allow delete;
+    
+      match /secret/{secret} {
+        allow read;
+      
+      }    
+    }
+
+    function getOr(request, field, alt) {
+      return request.resource.data.get(field, alt);
+    }
+  }
+}
