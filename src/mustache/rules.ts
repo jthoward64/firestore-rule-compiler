@@ -1,4 +1,4 @@
-import { FirestoreType, RuleMethod } from "../schema/schema";
+import { FirestoreType, RuleMethod } from "../lib/enums";
 
 export interface FlatAllowRule {
   method: RuleMethod[];
@@ -21,16 +21,16 @@ export interface FlatMatch {
   children?: FlatMatch[];
 }
 
-export interface MergedMatch {
+export interface ExpandedMatch {
   collectionPath: string;
   wildcardName: string;
   isWildCardRecursive?: boolean;
   rules: string[];
-  children?: MergedMatch[];
+  children?: ExpandedMatch[];
 }
 
 export interface Rules {
   topLevelMatchPath: string;
-  matches?: MergedMatch[];
+  matches?: ExpandedMatch[];
   customFunctions?: string[];
 }

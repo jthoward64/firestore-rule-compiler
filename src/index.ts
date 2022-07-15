@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
-import { renderSchema } from "./rules/render";
-import makeRules from "./rules/schemaToRules";
-import { validateSchema } from "./schema/validate";
+import { Model } from "./lib/Model";
+import { renderSchema } from "./mustache/render";
 
 export function main(inputFile: string, outputFile?: string) {
   if (!existsSync(inputFile)) {
@@ -12,20 +11,9 @@ export function main(inputFile: string, outputFile?: string) {
   const file = readFileSync(inputFile, 'utf8');
   const json = JSON.parse(file);
 
-
-  if (!validateSchema(json)) {
-    console.error('Invalid schema');
-    process.exit(1);
-  }
-
-  const rules = makeRules(json);
-
+  const model = Model.fromJSON(json);
+  const rules = model.flatten();
   const output = renderSchema(rules);
 
-  if (outputFile !== undefined) {
-    writeFileSync(outputFile, output);
-  } else {
-    console.log("\nGenerated Firestore Rules:\n");
-    console.log(output);
-  }
+  writeFileSync(outputFile ?? (inputFile.slice(0, inputFile.lastIndexOf('.')) + '.rules'), output);
 }

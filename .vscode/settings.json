@@ -8,7 +8,7 @@
       "fileMatch": [
         "test.json"
       ],
-      "url": "./dist/schema/schema.json"
+      "url": "./dist/schema.json"
     }
   ]
 }

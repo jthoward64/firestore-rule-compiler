@@ -6,8 +6,8 @@
   "main": "dist/index.js",
   "bin": "./bin.js",
   "scripts": {
-    "start": "node dist/bin.js",
-    "build": "tsc && npx typescript-json-schema tsconfig.json Schema --include src/schema/schema.ts -o dist/schema/schema.json && cp-cli src/rules/mustache dist/rules/mustache",
+    "start": "node bin.js",
+    "build": "tsc && npx typescript-json-schema tsconfig.json Model --tsNodeRegister --include src/lib/* -o dist/schema.json && cp-cli src/mustache dist/mustache",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
