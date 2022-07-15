@@ -1,3 +1,4 @@
+import { failWithMessage } from "../util";
 import { ComparisonOperator } from "./enums";
 import { Field } from "./Field";
 
@@ -62,7 +63,7 @@ export class Condition {
 
   static fromJson(json: any): Condition {
     if (json.fieldA == null || json.fieldB == null || json.comparator == null) {
-      throw new Error("Invalid Json for Condition:\n" + JSON.stringify(json));
+      failWithMessage("Invalid Json for Condition:\n" + JSON.stringify(json));
     }
 
     const { fieldA: fieldAJson, fieldB: fieldBJson, comparator: comparatorJson, isInverted: isInvertedJson, customOverride: customOverrideJson } = json;
@@ -78,7 +79,7 @@ export class Condition {
     } else if (typeof fieldAJson === "object") {
       fieldA = Field.fromJson(fieldAJson);
     } else {
-      throw new Error("Invalid fieldA for Condition:\n" + JSON.stringify(fieldAJson, null, 2));
+      failWithMessage("Invalid fieldA for Condition:\n" + JSON.stringify(fieldAJson, null, 2));
     }
 
     if (typeof fieldBJson === "string") {
@@ -86,21 +87,21 @@ export class Condition {
     } else if (typeof fieldBJson === "object") {
       fieldB = Field.fromJson(fieldBJson);
     } else {
-      throw new Error("Invalid fieldB for Condition:\n" + JSON.stringify(fieldBJson, null, 2));
+      failWithMessage("Invalid fieldB for Condition:\n" + JSON.stringify(fieldBJson, null, 2));
     }
 
     if (typeof comparatorJson === "string" && Object.keys(ComparisonOperator).includes(comparatorJson)) {
       comparator = comparatorJson as ComparisonOperator;
     } else {
-      throw new Error("Invalid comparator for Condition:\n" + JSON.stringify(comparatorJson, null, 2));
+      failWithMessage("Invalid comparator for Condition:\n" + JSON.stringify(comparatorJson, null, 2));
     }
 
     if (isInvertedJson != null && typeof isInvertedJson !== "boolean") {
-      throw new Error("Invalid isInverted for Condition:\n" + JSON.stringify(isInvertedJson, null, 2));
+      failWithMessage("Invalid isInverted for Condition:\n" + JSON.stringify(isInvertedJson, null, 2));
     }
 
     if (customOverrideJson != null && typeof customOverrideJson !== "string") {
-      throw new Error("Invalid customOverride for Condition:\n" + JSON.stringify(customOverrideJson, null, 2));
+      failWithMessage("Invalid customOverride for Condition:\n" + JSON.stringify(customOverrideJson, null, 2));
     }
 
     return new Condition(fieldA, comparator, fieldB, isInvertedJson, customOverrideJson);

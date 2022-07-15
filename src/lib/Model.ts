@@ -1,5 +1,6 @@
 import prettier from "prettier";
 import { FlatMatch, Rules } from "../mustache/rules";
+import { failWithMessage } from "../util";
 import { Match } from "./Match";
 
 export class Model {
@@ -44,13 +45,13 @@ export class Model {
 
   static fromJSON(json: any): Model {
     if (typeof json !== "object" || Array.isArray(json)) {
-      throw new Error("Model must be an object:\n" + JSON.stringify(json, null, 2));
+      failWithMessage("Model must be an object:\n" + JSON.stringify(json, null, 2));
     }
 
     if (json.topLevelMatchPath == undefined) {
-      throw new Error("topLevelMatchPath is required");
+      failWithMessage("topLevelMatchPath is required");
     } else if (typeof json.topLevelMatchPath !== "string") {
-      throw new Error("topLevelMatchPath must be a string");
+      failWithMessage("topLevelMatchPath must be a string");
     }
 
     return new Model(json.topLevelMatchPath, json.matches == undefined ? undefined : json.matches.map((match: Match) => Match.fromJson(match)), json.customFunctions);

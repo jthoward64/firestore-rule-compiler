@@ -1,3 +1,4 @@
+import { failWithMessage } from "../util";
 import { AnyOperator } from "./enums";
 
 export class Field {
@@ -30,7 +31,7 @@ export class Field {
     let operator: AnyOperator;
 
     if (json.fieldA == null || json.fieldB == null || json.operator == null) {
-      throw new Error("Invalid Json for Field:\n" + JSON.stringify(json));
+      failWithMessage("Invalid Json for Field:\n" + JSON.stringify(json));
     }
 
     const { fieldA: fieldAJson, fieldB: fieldBJson, operator: operatorJson } = json;
@@ -40,7 +41,7 @@ export class Field {
     } else if (typeof fieldAJson === "object") {
       fieldA = Field.fromJson(fieldAJson);
     } else {
-      throw new Error("Invalid fieldA for Field:\n" + JSON.stringify(fieldAJson, null, 2));
+      failWithMessage("Invalid fieldA for Field:\n" + JSON.stringify(fieldAJson, null, 2));
     }
 
     if (typeof fieldBJson === "string") {
@@ -48,13 +49,13 @@ export class Field {
     } else if (typeof fieldBJson === "object") {
       fieldB = Field.fromJson(fieldBJson);
     } else {
-      throw new Error("Invalid fieldB for Field:\n" + JSON.stringify(fieldBJson, null, 2));
+      failWithMessage("Invalid fieldB for Field:\n" + JSON.stringify(fieldBJson, null, 2));
     }
 
     if (typeof operatorJson === "string" && Object.keys(AnyOperator).includes(operatorJson)) {
       operator = operatorJson as AnyOperator;
     } else {
-      throw new Error("Invalid operator for Field:\n" + JSON.stringify(operatorJson, null, 2));
+      failWithMessage("Invalid operator for Field:\n" + JSON.stringify(operatorJson, null, 2));
     }
 
     return new Field(fieldA, operator, fieldB);

@@ -1,6 +1,6 @@
 {
   "name": "firestore-rule-compiler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "repository": "github:tajetaje/Firestore-Rule-Compiler",
   "main": "dist/index.js",

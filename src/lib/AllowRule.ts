@@ -1,4 +1,5 @@
 import { FlatAllowRule } from "../mustache/rules";
+import { failWithMessage } from "../util";
 import { Condition } from "./Condition";
 import { RuleMethod } from "./enums";
 
@@ -54,7 +55,7 @@ export class AllowRule {
 
   static fromJson(json: any): AllowRule {
     if (json.methods == null) {
-      throw new Error("methods is required");
+      failWithMessage("methods is required");
     }
 
     const { methods: jsonMethods, conditions: jsonConditions, requireAuth: jsonRequireAuth, requiredClaims: jsonRequiredClaims } = json;
@@ -70,7 +71,7 @@ export class AllowRule {
     if (Array.isArray(jsonMethods) && jsonMethods.length > 0) {
       methods = jsonMethods;
     } else {
-      throw new Error("methods is required");
+      failWithMessage("methods is required");
     }
 
     if (jsonConditions == null) {
@@ -92,7 +93,7 @@ export class AllowRule {
     } else if (typeof jsonRequireAuth === "boolean") {
       requireAuth = jsonRequireAuth;
     } else {
-      throw new Error("requireAuth must be a boolean");
+      failWithMessage("requireAuth must be a boolean");
     }
 
     if (jsonRequiredClaims == null) {
@@ -104,7 +105,7 @@ export class AllowRule {
         if (typeof requiredClaim === "object" && requiredClaim.name != null && typeof requiredClaim.name === "string" && (requiredClaim.value == null || typeof requiredClaim.value === "string" || typeof requiredClaim.value === "number" || typeof requiredClaim.value === "boolean")) {
           requiredClaims.push(requiredClaim);
         } else {
-          throw new Error("requiredClaims must be an array of objects with name and possibly a value of type string, number, or boolean");
+          failWithMessage("requiredClaims must be an array of objects with name and possibly a value of type string, number, or boolean");
         }
       }
     }
