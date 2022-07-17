@@ -6,7 +6,7 @@
     },
     {
       "fileMatch": [
-        "test.json"
+        "*.rules.json"
       ],
       "url": "./dist/schema.json"
     }

@@ -1,0 +1,19 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid=**} {
+      allow get: if  && request.auth.uid == uid;
+      allow list: if request.auth.uid == uid;
+      allow update: if request.auth.uid == uid;
+    
+      match /internal/info {
+      
+      }    
+    }
+
+    function getOr(request, field, alt) {
+      return request.resource.data.get(field, alt);
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { match } from "assert";
+import { match, throws } from "assert";
 import { ExpandedMatch, FlatMatch } from "../mustache/rules";
 import { failWithMessage } from "../util";
 import { AllowRule } from "./AllowRule";
@@ -40,9 +40,13 @@ export class Match {
   /**
    * The name of the document at the end of the collection, i.e. "uid"
    */
-  wildcardName: string;
+  documentName: string;
   /**
-   * Should the wildcard be followed by "=**", allows the document to be located in a subcolleciton
+   * Should the document be interpreted as a wildcard?
+   */
+  isWildCard?: boolean;
+  /**
+   * Should the wildcard be followed by "=**", allows the document to be located in a subcolleciton, has no effect if isWildCard is false
    */
   isWildCardRecursive?: boolean;
   /**
@@ -62,9 +66,10 @@ export class Match {
    */
   children?: Match[];
 
-  constructor(collectionPath: string, wildcardName: string, isWildCardRecursive?: boolean, allowRules?: AllowRule[], structureRules?: StructureRule[], isStructureExclusive?: boolean, children?: Match[]) {
+  constructor(collectionPath: string, documentName: string, isWildCard?: boolean, isWildCardRecursive?: boolean, allowRules?: AllowRule[], structureRules?: StructureRule[], isStructureExclusive?: boolean, children?: Match[]) {
     this.collectionPath = collectionPath;
-    this.wildcardName = wildcardName;
+    this.documentName = documentName;
+    this.isWildCard = isWildCard;
     this.isWildCardRecursive = isWildCardRecursive;
     this.allowRules = allowRules;
     this.structureRules = structureRules;
@@ -95,7 +100,7 @@ export class Match {
       ));
       const children = this.children ? this.children.map((child) => child.specify()) : undefined
 
-      return new Match(this.collectionPath, this.wildcardName, this.isWildCardRecursive, allowRules, this.structureRules, this.isStructureExclusive, children);
+      return new Match(this.collectionPath, this.documentName, this.isWildCardRecursive, this.isWildCard, allowRules, this.structureRules, this.isStructureExclusive, children);
     } else {
       return this;
     }
@@ -104,12 +109,15 @@ export class Match {
   flatten(): FlatMatch {
     const flatMatch: FlatMatch = {
       collectionPath: this.collectionPath,
-      wildcardName: this.wildcardName,
+      documentName: this.documentName,
       isStructureExclusive: this.isStructureExclusive,
     };
 
     if (this.isWildCardRecursive != undefined) {
       flatMatch.isWildCardRecursive = this.isWildCardRecursive;
+    }
+    if (this.isWildCard != undefined) {
+      flatMatch.isWildCard = this.isWildCard;
     }
     if (this.allowRules != undefined) {
       flatMatch.allowRules = this.allowRules.map((allowRule) => allowRule.flatten());
@@ -125,22 +133,26 @@ export class Match {
   }
 
   static fromJson(json: any): Match {
-    const { collectionPath, wildcardName, isWildCardRecursive, allowRules, structureRules, isStructureExclusive, children } = json;
+    const { collectionPath, documentName, isWildCardRecursive, isWildcard, allowRules, structureRules, isStructureExclusive, children } = json;
 
-    if (collectionPath == null || wildcardName == null) {
-      failWithMessage("collectionPath and wildcardName are required on Match:\n" + JSON.stringify(json, null, 2));
+    if (collectionPath == null || documentName == null) {
+      failWithMessage("collectionPath and documentName are required on Match:\n" + JSON.stringify(json, null, 2));
     }
 
     if (typeof collectionPath !== "string") {
       failWithMessage("collectionPath must be a string on Match:\n" + JSON.stringify(json, null, 2));
     }
 
-    if (typeof wildcardName !== "string") {
-      failWithMessage("wildcardName must be a string on Match:\n" + JSON.stringify(json, null, 2));
+    if (typeof documentName !== "string") {
+      failWithMessage("documentName must be a string on Match:\n" + JSON.stringify(json, null, 2));
     }
 
     if (isWildCardRecursive != undefined && typeof isWildCardRecursive !== "boolean") {
       failWithMessage("isWildCardRecursive must be a boolean on Match:\n" + JSON.stringify(json, null, 2));
+    }
+
+    if (isWildcard != undefined && typeof isWildcard !== "boolean") {
+      failWithMessage("isWildcard must be a boolean on Match:\n" + JSON.stringify(json, null, 2));
     }
 
     if (allowRules != undefined && !Array.isArray(allowRules)) {
@@ -159,7 +171,7 @@ export class Match {
       failWithMessage("children must be an array on Match:\n" + JSON.stringify(json, null, 2));
     }
 
-    return new Match(collectionPath, wildcardName, isWildCardRecursive, allowRules == null ? allowRules : allowRules.map((rule: any) => AllowRule.fromJson(rule)), structureRules == null ? undefined : structureRules.map((rule: any) => StructureRule.fromJson(rule)), isStructureExclusive, children == null ? undefined : children.map((child: any) => Match.fromJson(child)));
+    return new Match(collectionPath, documentName, json?.isWildCard, isWildCardRecursive, allowRules == null ? allowRules : allowRules.map((rule: any) => AllowRule.fromJson(rule)), structureRules == null ? undefined : structureRules.map((rule: any) => StructureRule.fromJson(rule)), isStructureExclusive, children == null ? undefined : children.map((child: any) => Match.fromJson(child)));
   }
 
   static expandFlatMatch(flatMatch: FlatMatch): ExpandedMatch {
@@ -231,7 +243,8 @@ export class Match {
 
     return {
       collectionPath: flatMatch.collectionPath,
-      wildcardName: flatMatch.wildcardName,
+      documentName: flatMatch.documentName,
+      isWildCard: flatMatch.isWildCard,
       isWildCardRecursive: flatMatch.isWildCardRecursive,
       rules: Object.entries(allowRules)
         .map(

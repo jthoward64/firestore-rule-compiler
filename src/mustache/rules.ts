@@ -13,8 +13,9 @@ export interface FlatStructureRule {
 
 export interface FlatMatch {
   collectionPath: string;
-  wildcardName: string;
+  documentName: string;
   isWildCardRecursive?: boolean;
+  isWildCard?: boolean;
   allowRules?: FlatAllowRule[];
   structureRules?: FlatStructureRule[];
   isStructureExclusive?: boolean;
@@ -23,8 +24,9 @@ export interface FlatMatch {
 
 export interface ExpandedMatch {
   collectionPath: string;
-  wildcardName: string;
+  documentName: string;
   isWildCardRecursive?: boolean;
+  isWildCard?: boolean;
   rules: string[];
   children?: ExpandedMatch[];
 }

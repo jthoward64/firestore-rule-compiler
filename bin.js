@@ -3,8 +3,6 @@ const { main } = require("./dist");
 
 const args = process.argv.slice(2);
 
-console.log(args, process.argv);
-
 for (let i = 0; i < args.length; i++) {
   if (args[i] === "--help") {
     console.log(`

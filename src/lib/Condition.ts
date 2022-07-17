@@ -63,7 +63,7 @@ export class Condition {
 
   static fromJson(json: any): Condition {
     if (json.fieldA == null || json.fieldB == null || json.comparator == null) {
-      failWithMessage("Invalid Json for Condition:\n" + JSON.stringify(json));
+      failWithMessage("Field A/B and comparator are required:\n" + JSON.stringify(json));
     }
 
     const { fieldA: fieldAJson, fieldB: fieldBJson, comparator: comparatorJson, isInverted: isInvertedJson, customOverride: customOverrideJson } = json;

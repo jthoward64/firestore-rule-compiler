@@ -1,4 +1,4 @@
-match /{{collectionPath}}/{{=<% %>=}}{<%wildcardName%><%={{ }}=%>{{#isWildCardRecursive}}=**{{/isWildCardRecursive}}} {
+match /{{collectionPath}}/{{=<% %>=}}<%#isWildCard%>{<%/isWildCard%><%={{ }}=%>{{documentName}}{{#isWildCardRecursive}}=**{{/isWildCardRecursive}}{{#isWildCard}}}{{/isWildCard}} {
 {{#rules}}
   {{.}}
 {{/rules}}

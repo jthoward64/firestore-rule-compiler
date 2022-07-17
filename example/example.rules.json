@@ -1,0 +1,39 @@
+{
+  "topLevelMatchPath": "/databases/{database}/documents",
+  "matches": [
+    {
+      "collectionPath": "users",
+      "documentName": "uid",
+      "isWildCardRecursive": true,
+      "isWildCard": true,
+      "allowRules": [
+        {
+          "methods": [
+            "get"
+          ],
+          "requireAuth": true
+        },
+        {
+          "methods": [
+            "read",
+            "update"
+          ],
+          "requireAuth": true,
+          "conditions": [
+            {
+              "fieldA": "request.auth.uid",
+              "comparator": "==",
+              "fieldB": "uid"
+            }
+          ]
+        }
+      ],
+      "children": [
+        {
+          "collectionPath": "internal",
+          "documentName": "info"
+        }
+      ]
+    }
+  ]
+}

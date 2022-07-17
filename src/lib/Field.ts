@@ -31,7 +31,7 @@ export class Field {
     let operator: AnyOperator;
 
     if (json.fieldA == null || json.fieldB == null || json.operator == null) {
-      failWithMessage("Invalid Json for Field:\n" + JSON.stringify(json));
+      failWithMessage("field A/B and operator are required:\n" + JSON.stringify(json));
     }
 
     const { fieldA: fieldAJson, fieldB: fieldBJson, operator: operatorJson } = json;

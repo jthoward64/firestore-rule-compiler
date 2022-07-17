@@ -15,5 +15,5 @@ export function main(inputFile: string, outputFile?: string) {
   const rules = model.flatten();
   const output = renderSchema(rules);
 
-  writeFileSync(outputFile ?? (inputFile.slice(0, inputFile.lastIndexOf('.')) + '.rules'), output);
+  writeFileSync(outputFile ?? (inputFile.slice(0, inputFile.indexOf('.', Math.max(inputFile.lastIndexOf('/') ?? 0, inputFile.lastIndexOf('\\') ?? 0))) + '.rules'), output);
 }
