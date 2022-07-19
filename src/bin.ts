@@ -7,12 +7,14 @@ declare global {
 }
 globalThis.debugMode = false;
 
-const args = process.argv.slice(2);
+const args = process.argv.slice(3);
+
+let outputFile: string | undefined;
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === "--help") {
     console.log(`
-    Usage: ${require("./package.json").name} [options] input.json [output.rules]
+    Usage: ${require("./package.json").name} input.json [output.rules] [options]
     Options:
       --version, -v: Prints the version of the tool.
       --debug: Enable debug mode.
@@ -25,11 +27,18 @@ for (let i = 0; i < args.length; i++) {
   } else if (args[i] === "--debug") {
     globalThis.debugMode = true;
     log("Debug mode enabled");
+  } else if (args[i].startsWith("-")) {
+    failWithMessage(`Unknown argument: "${args[i]}"`);
+  } else {
+    if (outputFile != null) {
+      failWithMessage(`Invalid arguments: Too many output files, make sure all flags begin with a dash (${args[i]})`);
+    }
+    outputFile = args[i];
   }
 }
 
 if (args.length < 1) {
-  failWithMessage('Invalid arguments: Expected at least one argument');
+  failWithMessage('Err: Expected an input file');
 }
 
-main(args[0], args[1]);
+main(process.argv[2], outputFile);
