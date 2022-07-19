@@ -201,10 +201,6 @@ export const defsSchema: JSONSchemaType<never> = {
           default: false,
           nullable: true,
         },
-        customOverride: {
-          type: "string",
-          nullable: true,
-        },
       },
       required: ["fieldA", "comparator", "fieldB"],
     },

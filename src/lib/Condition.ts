@@ -1,13 +1,11 @@
-import { failWithMessage } from "../util";
 import { BooleanOperator } from "./enums";
 import { Field, FieldObj } from "./Field";
 
 export interface ConditionObj {
   fieldA: FieldObj | string;
-  comparator: keyof BooleanOperator;
+  comparator: BooleanOperator;
   fieldB: FieldObj | string;
   isInverted?: boolean;
-  customOverride?: string;
 }
 
 export class Condition {
@@ -27,24 +25,15 @@ export class Condition {
    * Should the expression be preceded by "!"
    */
   isInverted?: boolean;
-  /**
-   * If provided, the other options will be ignored and this string will be used literally
-   */
-  customOverride?: string;
 
-  constructor(fieldA: Field | string, comparator: BooleanOperator, fieldB: Field | string, isInverted?: boolean, customOverride?: string) {
+  constructor(fieldA: Field | string, comparator: BooleanOperator, fieldB: Field | string, isInverted?: boolean) {
     this.fieldA = fieldA;
     this.comparator = comparator;
     this.fieldB = fieldB;
     this.isInverted = isInverted;
-    this.customOverride = customOverride;
   }
 
   flatten(): string {
-    if (this.customOverride) {
-      return this.customOverride;
-    }
-
     let flatFieldA: string;
     let flatFieldB: string;
 
@@ -75,6 +64,6 @@ export class Condition {
   }
 
   static fromJson(json: ConditionObj): Condition {
-    return new Condition(typeof json.fieldA === "string" ? json.fieldA : Field.fromJson(json.fieldA), json.comparator as BooleanOperator, typeof json.fieldB === "string" ? json.fieldB : Field.fromJson(json.fieldB), json.isInverted, json.customOverride);
+    return new Condition(typeof json.fieldA === "string" ? json.fieldA : Field.fromJson(json.fieldA), json.comparator as BooleanOperator, typeof json.fieldB === "string" ? json.fieldB : Field.fromJson(json.fieldB), json.isInverted);
   }
 }
