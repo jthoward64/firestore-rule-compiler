@@ -5,6 +5,8 @@ import { defsSchema, schema } from "./lib/schema";
 import { renderSchema } from "./mustache/render";
 import { failWithMessage, log } from "./util";
 
+const fileSeparator = process.platform === "win32" ? "\\" : "/";
+
 export function main(inputFile: string, outputFile?: string) {
   log("Starting...");
   log(`Checking for input file at ${inputFile}`);
@@ -57,7 +59,7 @@ export function main(inputFile: string, outputFile?: string) {
   } else {
     log("No output file specified, guessing output file name");
 
-    const fileExtensionIndex = inputFile.indexOf('.', Math.max(inputFile.lastIndexOf('/') ?? 0, inputFile.lastIndexOf('\\') ?? 0));
+    const fileExtensionIndex = inputFile.indexOf('.', Math.max(inputFile.lastIndexOf(fileSeparator), 0),);
 
     let outputFilePath;
     if (fileExtensionIndex === -1) {
