@@ -1,5 +1,11 @@
 #!/usr/bin/env node
-const { main } = require("./dist");
+import { main } from ".";
+import { log, failWithMessage } from "./util";
+
+declare global {
+  var debugMode: boolean;
+}
+globalThis.debugMode = false;
 
 const args = process.argv.slice(2);
 
@@ -17,13 +23,13 @@ for (let i = 0; i < args.length; i++) {
     console.log(`v${require("./package.json").version}`);
     process.exit(0);
   } else if (args[i] === "--debug") {
-    global.debugMode = true;
+    globalThis.debugMode = true;
+    log("Debug mode enabled");
   }
 }
 
 if (args.length < 1) {
-  console.error('Invalid arguments: Expected at least one argument');
-  process.exit(1);
+  failWithMessage('Invalid arguments: Expected at least one argument');
 }
 
 main(args[0], args[1]);

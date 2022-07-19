@@ -1,38 +1,75 @@
 import Ajv from "ajv";
-import { ValueScope } from "ajv/dist/compile/codegen/scope";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { Model } from "./lib/Model";
 import { defsSchema, schema } from "./lib/schema";
 import { renderSchema } from "./mustache/render";
-import { failWithMessage } from "./util";
+import { failWithMessage, log } from "./util";
 
 export function main(inputFile: string, outputFile?: string) {
+  log("Starting...");
+  log("Checking for input file");
+
   if (!existsSync(inputFile)) {
-    console.error('Invalid arguments: File does not exist');
-    process.exit(1);
+    failWithMessage('Invalid arguments: File does not exist');
   }
+  log("Input file found");
 
+  log("Reading input file contents");
   const file = readFileSync(inputFile, 'utf8');
-  const json = JSON.parse(file);
+  log("Input file contents read");
 
+  log("Paring input file contents");
+  const json = JSON.parse(file);
+  log("Input file parsed");
+
+  log("initializing ajv");
   const ajv = new Ajv({
     allowUnionTypes: true,
-    //@ts-expect-error Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
-    verbose: !!(global.debug),
-    //@ts-expect-error Element implicitly has an 'any' type because type 'typeof globalThis' has no index signature.
-    logger: global.debug ? console.log : undefined,
-  })
+    verbose: globalThis.debugMode,
+    logger: globalThis.debugMode ? { error: console.error, warn: console.warn, log: console.log } : undefined,
+  });
+  log("ajv successfully initialized");
 
-  // serialize will only accept data compatible with MyData
+  log("Validating input file contents");
   const validate = ajv.addSchema(defsSchema).compile(schema);
+  log("Input file validated");
 
   if (!validate(json)) {
     failWithMessage(JSON.stringify(validate.errors, null, 2));
   }
 
+  log("Constructing model");
   const model = Model.fromJSON(json);
-  const rules = model.flatten();
-  const output = renderSchema(rules);
+  log("Model constructed");
 
-  writeFileSync(outputFile ?? (inputFile.slice(0, inputFile.indexOf('.', Math.max(inputFile.lastIndexOf('/') ?? 0, inputFile.lastIndexOf('\\') ?? 0))) + '.rules'), output);
+  log("Flattening model");
+  const rules = model.flatten();
+  log("Model flattened");
+
+  log("Rendering rules");
+  const output = renderSchema(rules);
+  log("Rules rendered");
+
+  if (outputFile) {
+    log(`Writing output file: ${outputFile}`);
+    writeFileSync(outputFile, output);
+    log(`Output file written`);
+  } else {
+    log("No output file specified, guessing output file name");
+
+    const fileExtensionIndex = inputFile.indexOf('.', Math.max(inputFile.lastIndexOf('/') ?? 0, inputFile.lastIndexOf('\\') ?? 0));
+
+    let outputFilePath;
+    if (fileExtensionIndex === -1) {
+      log("No file extension found, adding .rules");
+      outputFilePath = inputFile + '.rules';
+    } else {
+      log("File extension found, replacing extension with .rules");
+      outputFilePath = inputFile.slice(0, fileExtensionIndex) + '.rules';
+    }
+
+    log(`Writing output file: ${outputFilePath}`);
+    writeFileSync(outputFilePath, output);
+    log(`Output file written`);
+  }
 }

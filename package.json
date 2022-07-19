@@ -4,9 +4,9 @@
   "description": "",
   "repository": "github:tajetaje/Firestore-Rule-Compiler",
   "main": "dist/index.js",
-  "bin": "./bin.js",
+  "bin": "dist/bin.js",
   "scripts": {
-    "start": "node bin.js",
+    "start": "node dist/bin.js",
     "build": "tsc && cp-cli src/mustache dist/mustache",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
