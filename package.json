@@ -7,7 +7,7 @@
   "bin": "./bin.js",
   "scripts": {
     "start": "node bin.js",
-    "build": "tsc && npx typescript-json-schema tsconfig.json Model --tsNodeRegister --include src/lib/* -o dist/schema.json && cp-cli src/mustache dist/mustache",
+    "build": "tsc && cp-cli src/mustache dist/mustache",
     "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/parser": "^7.18.8",
+    "ajv": "^8.11.0",
     "mustache": "^4.2.0",
     "prettier": "^2.7.1",
     "typescript": "^4.7.4"
@@ -26,8 +27,7 @@
     "@types/prettier": "^2.6.3",
     "cp-cli": "^2.0.0",
     "firebase": "^9.9.0",
-    "firebase-tools": "^11.2.1",
-    "typescript-json-schema": "^0.54.0"
+    "firebase-tools": "^11.2.1"
   },
   "files": [
     "dist/**/*",

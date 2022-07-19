@@ -1,14 +1,3 @@
 {
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "json.schemas": [
-    {
-      "url": "https://raw.githubusercontent.com/tajetaje/Firestore-Rule-Compiler/main/src/schema/schema.json"
-    },
-    {
-      "fileMatch": [
-        "*.rules.json"
-      ],
-      "url": "./dist/schema.json"
-    }
-  ]
 }

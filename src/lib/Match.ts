@@ -1,9 +1,20 @@
-import { match, throws } from "assert";
 import { ExpandedMatch, FlatMatch } from "../mustache/rules";
 import { failWithMessage } from "../util";
-import { AllowRule } from "./AllowRule";
+import { AllowRule, AllowRuleObj } from "./AllowRule";
 import { FirestoreType, RuleMethod } from "./enums";
-import { StructureRule } from "./StructureRule";
+import { StructureRule, StructureRuleObj } from "./StructureRule";
+
+export interface MatchObj {
+  collectionPath: string;
+  documentName: string;
+  isWildCard?: boolean;
+  isWildCardRecursive?: boolean;
+  allowRules?: AllowRuleObj[];
+  structureRules?: StructureRuleObj[];
+  isStructureExclusive?: boolean;
+  isAllowExclusive?: boolean;
+  children?: MatchObj[];
+}
 
 function getOptionalTypeCheck(field: string, type: FirestoreType) {
   switch (type) {
@@ -132,46 +143,8 @@ export class Match {
     return flatMatch;
   }
 
-  static fromJson(json: any): Match {
-    const { collectionPath, documentName, isWildCardRecursive, isWildcard, allowRules, structureRules, isStructureExclusive, children } = json;
-
-    if (collectionPath == null || documentName == null) {
-      failWithMessage("collectionPath and documentName are required on Match:\n" + JSON.stringify(json, null, 2));
-    }
-
-    if (typeof collectionPath !== "string") {
-      failWithMessage("collectionPath must be a string on Match:\n" + JSON.stringify(json, null, 2));
-    }
-
-    if (typeof documentName !== "string") {
-      failWithMessage("documentName must be a string on Match:\n" + JSON.stringify(json, null, 2));
-    }
-
-    if (isWildCardRecursive != undefined && typeof isWildCardRecursive !== "boolean") {
-      failWithMessage("isWildCardRecursive must be a boolean on Match:\n" + JSON.stringify(json, null, 2));
-    }
-
-    if (isWildcard != undefined && typeof isWildcard !== "boolean") {
-      failWithMessage("isWildcard must be a boolean on Match:\n" + JSON.stringify(json, null, 2));
-    }
-
-    if (allowRules != undefined && !Array.isArray(allowRules)) {
-      failWithMessage("allowRules must be an array on Match:\n" + JSON.stringify(json, null, 2));
-    }
-
-    if (structureRules != undefined && !Array.isArray(structureRules)) {
-      failWithMessage("structureRules must be an array on Match:\n" + JSON.stringify(json, null, 2));
-    }
-
-    if (isStructureExclusive != undefined && typeof isStructureExclusive !== "boolean") {
-      failWithMessage("isStructureExclusive must be a boolean on Match:\n" + JSON.stringify(json, null, 2));
-    }
-
-    if (children != undefined && (!Array.isArray(children) || children.length < 1)) {
-      failWithMessage("children must be an array on Match:\n" + JSON.stringify(json, null, 2));
-    }
-
-    return new Match(collectionPath, documentName, json?.isWildCard, isWildCardRecursive, allowRules == null ? allowRules : allowRules.map((rule: any) => AllowRule.fromJson(rule)), structureRules == null ? undefined : structureRules.map((rule: any) => StructureRule.fromJson(rule)), isStructureExclusive, children == null ? undefined : children.map((child: any) => Match.fromJson(child)));
+  static fromJson(json: MatchObj): Match {
+    return new Match(json.collectionPath, json.documentName, json.isWildCard, json.isWildCardRecursive, json.allowRules == null ? json.allowRules : json.allowRules.map((rule: any) => AllowRule.fromJson(rule)), json.structureRules == null ? undefined : json.structureRules.map((rule: any) => StructureRule.fromJson(rule)), json.isStructureExclusive, json.children == null ? undefined : json.children.map((child: any) => Match.fromJson(child)));
   }
 
   static expandFlatMatch(flatMatch: FlatMatch): ExpandedMatch {

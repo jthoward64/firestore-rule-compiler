@@ -1,6 +1,14 @@
 import { failWithMessage } from "../util";
 import { AnyOperator } from "./enums";
 
+export interface FieldObj {
+  fieldA: FieldObj | string;
+  comparator: keyof AnyOperator;
+  fieldB: FieldObj | string;
+}
+
+
+
 export class Field {
   /**
    * The lefthand field to compare, can be a field object, or a string that is taken literally
@@ -25,39 +33,7 @@ export class Field {
     return `(${this.fieldA}) ${this.operator} (${this.fieldB})`;
   }
 
-  static fromJson(json: any): Field {
-    let fieldA: Field | string;
-    let fieldB: Field | string;
-    let operator: AnyOperator;
-
-    if (json.fieldA == null || json.fieldB == null || json.operator == null) {
-      failWithMessage("field A/B and operator are required:\n" + JSON.stringify(json));
-    }
-
-    const { fieldA: fieldAJson, fieldB: fieldBJson, operator: operatorJson } = json;
-
-    if (typeof fieldAJson === "string") {
-      fieldA = fieldAJson;
-    } else if (typeof fieldAJson === "object") {
-      fieldA = Field.fromJson(fieldAJson);
-    } else {
-      failWithMessage("Invalid fieldA for Field:\n" + JSON.stringify(fieldAJson, null, 2));
-    }
-
-    if (typeof fieldBJson === "string") {
-      fieldB = fieldBJson;
-    } else if (typeof fieldBJson === "object") {
-      fieldB = Field.fromJson(fieldBJson);
-    } else {
-      failWithMessage("Invalid fieldB for Field:\n" + JSON.stringify(fieldBJson, null, 2));
-    }
-
-    if (typeof operatorJson === "string" && Object.keys(AnyOperator).includes(operatorJson)) {
-      operator = operatorJson as AnyOperator;
-    } else {
-      failWithMessage("Invalid operator for Field:\n" + JSON.stringify(operatorJson, null, 2));
-    }
-
-    return new Field(fieldA, operator, fieldB);
+  static fromJson(json: FieldObj): Field {
+    return new Field(typeof json.fieldA === "string" ? json.fieldA : Field.fromJson(json.fieldA), json.comparator as AnyOperator, typeof json.fieldB === "string" ? json.fieldB : Field.fromJson(json.fieldB));
   }
 }

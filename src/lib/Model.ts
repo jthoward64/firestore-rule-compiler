@@ -1,7 +1,14 @@
+import { JSONSchemaType } from "ajv/dist/core";
 import prettier from "prettier";
 import { FlatMatch, Rules } from "../mustache/rules";
 import { failWithMessage } from "../util";
-import { Match } from "./Match";
+import { Match, MatchObj } from "./Match";
+
+export interface ModelObj {
+  topLevelMatchPath: string;
+  matches?: MatchObj[];
+  customFunctions?: string[];
+}
 
 export class Model {
   /**
@@ -43,17 +50,7 @@ export class Model {
     return rules;
   }
 
-  static fromJSON(json: any): Model {
-    if (typeof json !== "object" || Array.isArray(json)) {
-      failWithMessage("Model must be an object:\n" + JSON.stringify(json, null, 2));
-    }
-
-    if (json.topLevelMatchPath == undefined) {
-      failWithMessage("topLevelMatchPath is required");
-    } else if (typeof json.topLevelMatchPath !== "string") {
-      failWithMessage("topLevelMatchPath must be a string");
-    }
-
-    return new Model(json.topLevelMatchPath, json.matches == undefined ? undefined : json.matches.map((match: Match) => Match.fromJson(match)), json.customFunctions);
+  static fromJSON(json: ModelObj): Model {
+    return new Model(json.topLevelMatchPath, json.matches == null ? json.matches : json.matches.map((match) => Match.fromJson(match)), json.customFunctions);
   }
 }

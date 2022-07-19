@@ -2,6 +2,12 @@ import { FlatStructureRule } from "../mustache/rules";
 import { failWithMessage } from "../util";
 import { FirestoreType } from "./enums";
 
+export interface StructureRuleObj {
+  field: string;
+  type: FirestoreType[];
+  required?: boolean;
+}
+
 export class StructureRule {
   /**
    * The name of the field to check
@@ -39,39 +45,7 @@ export class StructureRule {
     return flatStructureRule;
   }
 
-  static fromJson(json: any): StructureRule {
-    if (json.field == null) {
-      failWithMessage("StructureRule must have a field");
-    }
-
-    const { field: jsonField, type: jsonType, required: jsonRequired } = json;
-
-    let field: string;
-    let type: FirestoreType[];
-    let required: boolean;
-
-    if (typeof jsonField !== "string") {
-      failWithMessage("StructureRule field must be a string");
-    } else {
-      field = jsonField;
-    }
-
-    if (jsonType == null) {
-      type = jsonType;
-    } else if (!Array.isArray(jsonType)) {
-      failWithMessage("StructureRule type must be an array");
-    } else if (Array.isArray(jsonType) && jsonType.length > 0 && jsonType.every(type => typeof type === "string")) {
-      type = jsonType;
-    } else {
-      failWithMessage("StructureRule type must be an array of types");
-    }
-
-    if (jsonRequired != null && typeof jsonRequired !== "boolean") {
-      failWithMessage("StructureRule required must be a boolean");
-    } else {
-      required = jsonRequired;
-    }
-
-    return new StructureRule(field, type, required);
+  static fromJson(json: StructureRuleObj): StructureRule {
+    return new StructureRule(json.field, json.type, json.required);
   }
 }
