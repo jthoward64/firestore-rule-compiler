@@ -1,5 +1,5 @@
 import { JSONSchemaType } from "ajv"
-import { AnyOperator, ComparisonOperator, FirestoreType, RuleMethod } from "./enums";
+import { AnyOperator, BooleanOperator, FirestoreType, RuleMethod } from "./enums";
 import { ModelObj } from "./Model"
 
 //@ts-expect-error TODO fix
@@ -183,7 +183,7 @@ export const defsSchema: JSONSchemaType<never> = {
         },
         comparator: {
           type: "string",
-          enum: Object.keys(ComparisonOperator) as (keyof ComparisonOperator)[],
+          enum: Object.keys(BooleanOperator) as (keyof BooleanOperator)[],
         },
         fieldB: {
           type: ["string", "object"],

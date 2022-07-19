@@ -15,15 +15,23 @@
         },
         {
           "methods": [
-            "read",
+            "list",
             "update"
           ],
           "requireAuth": true,
           "conditions": [
             {
-              "fieldA": "request.auth.uid",
-              "comparator": "==",
-              "fieldB": "uid"
+              "fieldA": {
+                "fieldA": "request.auth.uid",
+                "comparator": "==",
+                "fieldB": "uid"
+              },
+              "comparator": "||",
+              "fieldB": {
+                "fieldA": "request.auth.token.permissions",
+                "comparator": "==",
+                "fieldB": "'admin'"
+              }
             }
           ]
         }
@@ -31,7 +39,22 @@
       "children": [
         {
           "collectionPath": "internal",
-          "documentName": "info"
+          "documentName": "info",
+          "allowRules": [
+            {
+              "methods": [
+                "read",
+                "write"
+              ],
+              "requireAuth": true,
+              "requiredClaims": [
+                {
+                  "name": "permissions",
+                  "value": "'admin'"
+                }
+              ]
+            }
+          ]
         }
       ]
     }

@@ -52,13 +52,22 @@ export class AllowRule {
     };
 
     const flatConditions: string[] = [];
+
     if (Array.isArray(this.conditions) && this.conditions.length > 0) {
       this.conditions.forEach(condition => {
         flatConditions.push(typeof condition === "string" ? condition : condition.flatten());
       });
-
-      flatAllowRule.conditions = flatConditions;
     }
+    if (this.requireAuth) {
+      flatConditions.push("request.auth != null");
+    }
+    if (Array.isArray(this.requiredClaims) && this.requiredClaims.length > 0) {
+      this.requiredClaims.forEach(claim => {
+        flatConditions.push(`request.auth.token.${claim.name} ${claim.value ? `== ${claim.value}` : `!= null`}`);
+      });
+    }
+
+    flatAllowRule.conditions = flatConditions;
 
     return flatAllowRule;
   }

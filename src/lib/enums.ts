@@ -19,17 +19,30 @@ export enum ComparisonOperator {
   "is" = "is"
 };
 
+export enum LogicalOperator {
+  "&&" = "&&",
+  "||" = "||"
+};
+
+export enum BooleanOperator {
+  "<" = "<",
+  "<=" = "<=",
+  "==" = "==",
+  "!=" = "!=",
+  ">=" = ">=",
+  ">" = ">",
+  "in" = "in",
+  "is" = "is",
+  "&&" = "&&",
+  "||" = "||"
+}
+
 export enum ArithmeticOperator {
   "+" = "+",
   "-" = "-",
   "&" = "*",
   "/" = "/",
   "%" = "%"
-};
-
-export enum LogicalOperator {
-  "&&" = "&&",
-  "||" = "||"
 };
 
 export enum AnyOperator {

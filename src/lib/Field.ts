@@ -30,7 +30,16 @@ export class Field {
   }
 
   flatten(): string {
-    return `(${this.fieldA}) ${this.operator} (${this.fieldB})`;
+    if (typeof this.fieldA === "string" && typeof this.fieldB === "string") {
+      return `${this.fieldA} ${this.operator} ${this.fieldB}`;
+    } else if (typeof this.fieldA === "string" && typeof this.fieldB !== "string") {
+      return `$({this.fieldA} ${this.operator} ${this.fieldB.flatten()})`;
+    } else if (typeof this.fieldA !== "string" && typeof this.fieldB === "string") {
+      return `(${this.fieldA.flatten()} ${this.operator} ${this.fieldB})`;
+    } else if (typeof this.fieldA !== "string" && typeof this.fieldB !== "string") {
+      return `(${this.fieldA.flatten()} ${this.operator} ${this.fieldB.flatten()})`;
+    }
+    failWithMessage(`Field.flatten() was called for a field that may not have been a string or a field object`);
   }
 
   static fromJson(json: FieldObj): Field {

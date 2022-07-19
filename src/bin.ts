@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { main } from ".";
-import { failWithMessage } from "./util";
 
 declare global {
   var debugMode: boolean;

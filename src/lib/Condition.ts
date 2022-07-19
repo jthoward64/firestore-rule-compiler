@@ -1,10 +1,10 @@
 import { failWithMessage } from "../util";
-import { ComparisonOperator } from "./enums";
+import { BooleanOperator } from "./enums";
 import { Field, FieldObj } from "./Field";
 
 export interface ConditionObj {
   fieldA: FieldObj | string;
-  comparator: keyof ComparisonOperator;
+  comparator: keyof BooleanOperator;
   fieldB: FieldObj | string;
   isInverted?: boolean;
   customOverride?: string;
@@ -18,7 +18,7 @@ export class Condition {
   /**
    * The comparator to put between the two fields
    */
-  comparator: ComparisonOperator;
+  comparator: BooleanOperator;
   /**
    * The righthand field to compare, can be a field object, or a string that is taken literally
    */
@@ -32,7 +32,7 @@ export class Condition {
    */
   customOverride?: string;
 
-  constructor(fieldA: Field | string, comparator: ComparisonOperator, fieldB: Field | string, isInverted?: boolean, customOverride?: string) {
+  constructor(fieldA: Field | string, comparator: BooleanOperator, fieldB: Field | string, isInverted?: boolean, customOverride?: string) {
     this.fieldA = fieldA;
     this.comparator = comparator;
     this.fieldB = fieldB;
@@ -48,28 +48,33 @@ export class Condition {
     let flatFieldA: string;
     let flatFieldB: string;
 
-    let shouldWrap = false;
-
     if (typeof this.fieldA === 'string') {
       flatFieldA = this.fieldA;
     } else {
-      flatFieldA = '(' + this.fieldA.flatten() + ')';
+      flatFieldA = this.fieldA.flatten();
     }
 
     if (typeof this.fieldB === 'string') {
       flatFieldB = this.fieldB;
     } else {
-      flatFieldB = '(' + this.fieldB.flatten() + ')';
+      flatFieldB = this.fieldB.flatten();
     }
 
-    if (this.isInverted) {
-      return `!(${flatFieldA} ${this.comparator} ${flatFieldB})`;
-    } else {
-      return `${flatFieldA} ${this.comparator} ${flatFieldB}`;
+    let shouldWrap = this.comparator === BooleanOperator["||"] || this.comparator === BooleanOperator["&&"];
+    shouldWrap = shouldWrap || (this.isInverted ?? false);
+
+    let returnValue = `${flatFieldA} ${this.comparator} ${flatFieldB}`;
+    if (shouldWrap) {
+      returnValue = `(${returnValue})`;
     }
+    if (this.isInverted) {
+      returnValue = `!${returnValue}`;
+    }
+
+    return returnValue;
   }
 
   static fromJson(json: ConditionObj): Condition {
-    return new Condition(typeof json.fieldA === "string" ? json.fieldA : Field.fromJson(json.fieldA), json.comparator as ComparisonOperator, typeof json.fieldB === "string" ? json.fieldB : Field.fromJson(json.fieldB), json.isInverted, json.customOverride);
+    return new Condition(typeof json.fieldA === "string" ? json.fieldA : Field.fromJson(json.fieldA), json.comparator as BooleanOperator, typeof json.fieldB === "string" ? json.fieldB : Field.fromJson(json.fieldB), json.isInverted, json.customOverride);
   }
 }

@@ -6,12 +6,12 @@ service cloud.firestore {
     {{> match}}
 
     {{/matches}}
+  }
 
-    {{#customFunctions}}
-    {{.}}
-    {{/customFunctions}}
-    function getOr(request, field, alt) {
-      return request.resource.data.get(field, alt);
-    }
+  {{#customFunctions}}
+  {{.}}
+  {{/customFunctions}}
+  function getOr(request, field, alt) {
+    return request.resource.data.get(field, alt);
   }
 }
