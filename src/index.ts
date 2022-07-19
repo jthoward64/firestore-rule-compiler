@@ -1,5 +1,5 @@
 import Ajv from "ajv";
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync, constants } from "fs";
 import { Model } from "./lib/Model";
 import { defsSchema, schema } from "./lib/schema";
 import { renderSchema } from "./mustache/render";
@@ -7,7 +7,7 @@ import { failWithMessage, log } from "./util";
 
 export function main(inputFile: string, outputFile?: string) {
   log("Starting...");
-  log("Checking for input file");
+  log(`Checking for input file at ${inputFile}`);
 
   if (!existsSync(inputFile)) {
     failWithMessage('Invalid arguments: File does not exist');

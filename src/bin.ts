@@ -1,44 +1,25 @@
 #!/usr/bin/env node
+import { Command } from "commander";
 import { main } from ".";
-import { log, failWithMessage } from "./util";
+import { failWithMessage } from "./util";
 
 declare global {
   var debugMode: boolean;
 }
 globalThis.debugMode = false;
 
-const args = process.argv.slice(3);
+let program = new Command("Firestore Rule Compiler");
 
-let outputFile: string | undefined;
+program
+  .option('-d, --debug', 'output extra debugging')
+  .version(require('../package.json').version)
+  .argument('<inputFile>', 'json model file to load')
+  .option('-o, --output <path>', 'where to save the generated rules')
+  .action((inputFile, { debug, output: outputFile }) => {
+    globalThis.debugMode = debug ?? false;
 
-for (let i = 0; i < args.length; i++) {
-  if (args[i] === "--help") {
-    console.log(`
-    Usage: ${require("./package.json").name} input.json [output.rules] [options]
-    Options:
-      --version, -v: Prints the version of the tool.
-      --debug: Enable debug mode.
-      --help: Show this help menu.
-    `);
-    process.exit(0);
-  } else if (args[i] === "--version" || args[i] === "-v") {
-    console.log(`v${require("./package.json").version}`);
-    process.exit(0);
-  } else if (args[i] === "--debug") {
-    globalThis.debugMode = true;
-    log("Debug mode enabled");
-  } else if (args[i].startsWith("-")) {
-    failWithMessage(`Unknown argument: "${args[i]}"`);
-  } else {
-    if (outputFile != null) {
-      failWithMessage(`Invalid arguments: Too many output files, make sure all flags begin with a dash (${args[i]})`);
-    }
-    outputFile = args[i];
-  }
-}
+    main(inputFile, outputFile);
+  });
 
-if (args.length < 1) {
-  failWithMessage('Err: Expected an input file');
-}
 
-main(process.argv[2], outputFile);
+program.parse();
