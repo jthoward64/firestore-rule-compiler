@@ -16,7 +16,7 @@ export interface MatchObj {
   children?: MatchObj[];
 }
 
-function getOptionalTypeCheck(field: string, type: FirestoreType) {
+export function getOptionalTypeCheck(field: string, type: FirestoreType) {
   switch (type) {
     case FirestoreType.string:
       return `getOr(request, '${field}', '')`
@@ -25,7 +25,7 @@ function getOptionalTypeCheck(field: string, type: FirestoreType) {
     case FirestoreType.float:
       return `getOr(request, '${field}', 0)`
     case FirestoreType.bytes:
-      return `getOr(request, '${field}', b'\\x2A')`
+      return `getOr(request, '${field}', b'\\x00')`
     case FirestoreType.bool:
       return `getOr(request, '${field}', false)`
     case FirestoreType.list:
