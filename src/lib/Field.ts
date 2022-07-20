@@ -3,7 +3,7 @@ import { AnyOperator } from "./enums";
 
 export interface FieldObj {
   fieldA: FieldObj | string;
-  comparator: keyof AnyOperator;
+  comparator: AnyOperator;
   fieldB: FieldObj | string;
 }
 
