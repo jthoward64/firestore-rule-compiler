@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
-  "$id": "https://raw.githubusercontent.com/tajetaje/firestore-rule-compiler/main/src/lib/defs.json",
+  "$id": "https://raw.githubusercontent.com/tajetaje/firestore-rule-compiler/main/src/lib/defs.schema.json",
   "definitions": {
     "match": {
       "type": "object",
@@ -64,8 +64,7 @@
     "structureRule": {
       "type": "object",
       "required": [
-        "field",
-        "type"
+        "field"
       ],
       "properties": {
         "field": {

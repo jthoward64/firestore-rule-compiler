@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "bin": "dist/bin.js",
   "scripts": {
-    "start": "npx .",
+    "start": "node dist/bin.js",
     "build": "tsc && cp-cli src/mustache dist/mustache",
     "prepublish": "npm run build",
     "test": "npx jest"

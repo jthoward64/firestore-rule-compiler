@@ -4,7 +4,7 @@ import { FirestoreType } from "./enums";
 
 export interface StructureRuleObj {
   field: string;
-  type: FirestoreType[];
+  type?: FirestoreType[];
   required?: boolean;
 }
 
