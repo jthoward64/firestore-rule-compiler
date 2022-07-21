@@ -6,43 +6,45 @@
       "type": "object",
       "properties": {
         "collectionPath": {
-          "type": "string"
+          "type": "string",
+          "description": "The slash separated path to the field, e.g. \"collection/document/sub-collection\", no leading or trailing slashes"
         },
         "documentName": {
-          "type": "string"
+          "type": "string",
+          "description": "The name of the document at the end of the collection, i.e. \"uid\""
         },
         "isWildCard": {
           "type": "boolean",
           "default": false,
-          "nullable": true
+          "nullable": true,
+          "description": "Should the document be interpreted as a wildcard?"
         },
         "isWildCardRecursive": {
           "type": "boolean",
           "default": false,
-          "nullable": true
+          "nullable": true,
+          "description": "Should the wildcard be followed by \"=**\", allows the document to be located in a subcolleciton, has no effect if isWildCard is false"
         },
         "allowRules": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/allowRule"
           },
-          "nullable": true
+          "nullable": true,
+          "description": "The logical rules to apply to the field"
         },
         "structureRules": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/structureRule"
-          }
+          },
+          "description": "The type-based rules to apply to the field"
         },
         "isStructureExclusive": {
           "type": "boolean",
           "default": false,
-          "nullable": true
-        },
-        "isAllowExclusive": {
-          "type": "boolean",
-          "default": false,
-          "nullable": true
+          "nullable": true,
+          "description": "Should any fields not specified in the structure be disallowed?"
         },
         "children": {
           "type": "array",
@@ -50,7 +52,8 @@
             "type": "object",
             "$ref": "#"
           },
-          "nullable": true
+          "nullable": true,
+          "description": "Child matches"
         }
       },
       "required": [
@@ -66,7 +69,8 @@
       ],
       "properties": {
         "field": {
-          "type": "string"
+          "type": "string",
+          "description": "The name of the field to check"
         },
         "type": {
           "type": "array",
@@ -85,11 +89,13 @@
               "map",
               "string"
             ]
-          }
+          },
+          "description": "The allowed types for the field\nIf type is not specified, just make sure the field exists and ignore type (results in no effect to update)"
         },
         "required": {
           "type": "boolean",
-          "nullable": true
+          "nullable": true,
+          "description": "Is the field required?"
         }
       }
     },
@@ -112,7 +118,8 @@
               "update",
               "delete"
             ]
-          }
+          },
+          "description": "The methods to allow if the conditions are met"
         },
         "conditions": {
           "type": "array",
@@ -130,11 +137,13 @@
               }
             ]
           },
-          "nullable": true
+          "nullable": true,
+          "description": "A list of conditions that must be met for the rule to be allowed, joined by \"&&\""
         },
         "requireAuth": {
           "type": "boolean",
-          "nullable": true
+          "nullable": true,
+          "description": "If true adds \"request.auth != null\" to the condition"
         },
         "requiredClaims": {
           "type": "array",
@@ -145,7 +154,8 @@
             ],
             "properties": {
               "name": {
-                "type": "string"
+                "type": "string",
+                "description": "The claim to check"
               },
               "value": {
                 "type": [
@@ -164,11 +174,13 @@
                   {
                     "type": "boolean"
                   }
-                ]
+                ],
+                "description": "The value to check against"
               }
             }
           },
-          "nullable": true
+          "nullable": true,
+          "description": "Adds a rule for each claim, if value is set for the claim, adds \"request.auth.token.${name} == ${value}\" to the condition, otherwise adds \"request.auth.token.${name} != null\""
         }
       }
     },
@@ -187,7 +199,8 @@
             {
               "$ref": "#/definitions/field"
             }
-          ]
+          ],
+          "description": "The lefthand field to compare, can be a field object, or a string that is taken literally"
         },
         "comparator": {
           "type": "string",
@@ -202,7 +215,8 @@
             "is",
             "&&",
             "||"
-          ]
+          ],
+          "description": "The comparator to put between the two fields"
         },
         "fieldB": {
           "type": [
@@ -216,12 +230,14 @@
             {
               "$ref": "#/definitions/field"
             }
-          ]
+          ],
+          "description": "The righthand field to compare, can be a field object, or a string that is taken literally"
         },
         "isInverted": {
           "type": "boolean",
           "default": false,
-          "nullable": true
+          "nullable": true,
+          "description": "Should the expression be preceded by \"!\""
         }
       },
       "required": [
@@ -245,7 +261,8 @@
             {
               "$ref": "#/definitions/field"
             }
-          ]
+          ],
+          "description": "The lefthand field to compare, can be a field object, or a string that is taken literally"
         },
         "comparator": {
           "type": "string",
@@ -265,7 +282,8 @@
             "%",
             "&&",
             "||"
-          ]
+          ],
+          "description": "The comparator to put between the two fields"
         },
         "fieldB": {
           "type": [
@@ -279,7 +297,8 @@
             {
               "$ref": "#/definitions/field"
             }
-          ]
+          ],
+          "description": "The righthand field to compare, can be a field object, or a string that is taken literally"
         }
       },
       "required": [
