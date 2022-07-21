@@ -6,4 +6,4 @@ import { ModelObj } from "./Model"
 export const schema: JSONSchemaType<ModelObj> = import("./schema.json")
 
 // @ts-expect-error
-export const defsSchema: JSONSchemaType<never> = import("./defsSchema.json");
+export const defsSchema: JSONSchemaType<never> = import("./defs.json");
