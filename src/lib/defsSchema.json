@@ -1,0 +1,292 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://raw.githubusercontent.com/tajetaje/firestore-rule-compiler/main/src/lib/defs.json",
+  "definitions": {
+    "match": {
+      "type": "object",
+      "properties": {
+        "collectionPath": {
+          "type": "string"
+        },
+        "documentName": {
+          "type": "string"
+        },
+        "isWildCard": {
+          "type": "boolean",
+          "default": false,
+          "nullable": true
+        },
+        "isWildCardRecursive": {
+          "type": "boolean",
+          "default": false,
+          "nullable": true
+        },
+        "allowRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/allowRule"
+          },
+          "nullable": true
+        },
+        "structureRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/structureRule"
+          }
+        },
+        "isStructureExclusive": {
+          "type": "boolean",
+          "default": false,
+          "nullable": true
+        },
+        "isAllowExclusive": {
+          "type": "boolean",
+          "default": false,
+          "nullable": true
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#"
+          },
+          "nullable": true
+        }
+      },
+      "required": [
+        "collectionPath",
+        "documentName"
+      ]
+    },
+    "structureRule": {
+      "type": "object",
+      "required": [
+        "field",
+        "type"
+      ],
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "type": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "bool",
+              "bytes",
+              "float",
+              "int",
+              "list",
+              "latlong",
+              "number",
+              "path",
+              "array",
+              "map",
+              "string"
+            ]
+          }
+        },
+        "required": {
+          "type": "boolean",
+          "nullable": true
+        }
+      }
+    },
+    "allowRule": {
+      "type": "object",
+      "required": [
+        "methods"
+      ],
+      "properties": {
+        "methods": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "read",
+              "write",
+              "get",
+              "list",
+              "create",
+              "update",
+              "delete"
+            ]
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "object"
+            ],
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/definitions/condition"
+              }
+            ]
+          },
+          "nullable": true
+        },
+        "requireAuth": {
+          "type": "boolean",
+          "nullable": true
+        },
+        "requiredClaims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean"
+                ],
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  }
+                ]
+              }
+            }
+          },
+          "nullable": true
+        }
+      }
+    },
+    "condition": {
+      "type": "object",
+      "properties": {
+        "fieldA": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/field"
+            }
+          ]
+        },
+        "comparator": {
+          "type": "string",
+          "enum": [
+            "<",
+            "<=",
+            "==",
+            "!=",
+            ">=",
+            ">",
+            "in",
+            "is",
+            "&&",
+            "||"
+          ]
+        },
+        "fieldB": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/field"
+            }
+          ]
+        },
+        "isInverted": {
+          "type": "boolean",
+          "default": false,
+          "nullable": true
+        }
+      },
+      "required": [
+        "fieldA",
+        "comparator",
+        "fieldB"
+      ]
+    },
+    "field": {
+      "type": "object",
+      "properties": {
+        "fieldA": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/field"
+            }
+          ]
+        },
+        "comparator": {
+          "type": "string",
+          "enum": [
+            "<",
+            "<=",
+            "==",
+            "!=",
+            ">=",
+            ">",
+            "in",
+            "is",
+            "+",
+            "-",
+            "*",
+            "/",
+            "%",
+            "&&",
+            "||"
+          ]
+        },
+        "fieldB": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/field"
+            }
+          ]
+        }
+      },
+      "required": [
+        "fieldA",
+        "comparator",
+        "fieldB"
+      ]
+    }
+  }
+}

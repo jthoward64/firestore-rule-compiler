@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://raw.githubusercontent.com/tajetaje/firestore-rule-compiler/main/src/lib/schema.json",
+  "type": "object",
+  "properties": {
+    "topLevelMatchPath": {
+      "type": "string"
+    },
+    "matches": {
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/tajetaje/firestore-rule-compiler/main/src/lib/defs.json#/definitions/match"
+      },
+      "nullable": true
+    },
+    "customFunctions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "nullable": true
+    }
+  },
+  "required": [
+    "topLevelMatchPath"
+  ]
+}
