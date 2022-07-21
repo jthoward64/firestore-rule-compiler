@@ -63,7 +63,34 @@ export class AllowRule {
     }
     if (Array.isArray(this.requiredClaims) && this.requiredClaims.length > 0) {
       this.requiredClaims.forEach(claim => {
-        flatConditions.push(`request.auth.token.${claim.name} ${claim.value ? `== ${claim.value}` : `!= null`}`);
+        let requiresBracket = false;
+        for (let i = 0; i < claim.name.length; i++) {
+          if (claim.name.charCodeAt(i) > 127) {
+            requiresBracket = true;
+            break;
+          }
+        }
+
+        let flatCondition = "request.auth.token";
+        flatCondition += requiresBracket ? `.${claim.name} ` : `['${claim.name}'] `;
+
+        if (claim.value == null) {
+          flatCondition += `!= null`;
+        } else {
+          switch (typeof claim.value) {
+            case "string":
+              flatCondition += `== "${claim.value}"`;
+              break;
+            case "number":
+            case "boolean":
+              flatCondition += `== ${claim.value}`;
+              break;
+            default:
+              failWithMessage(`Unsupported claim value type: ${typeof claim.value} for claim ${claim.name} in:\n${JSON.stringify(this, null, 2)}`);
+          }
+        }
+
+        flatConditions.push(flatCondition);
       });
     }
 

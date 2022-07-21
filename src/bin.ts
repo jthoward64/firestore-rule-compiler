@@ -20,5 +20,4 @@ program
     main(inputFile, outputFile);
   });
 
-
 program.parse();

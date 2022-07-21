@@ -30,7 +30,7 @@
               "fieldB": {
                 "fieldA": "request.auth.token.permissions",
                 "comparator": "==",
-                "fieldB": "'admin'"
+                "fieldB": "admin"
               }
             }
           ]
@@ -50,7 +50,7 @@
               "requiredClaims": [
                 {
                   "name": "permissions",
-                  "value": "'admin'"
+                  "value": "admin"
                 }
               ]
             }

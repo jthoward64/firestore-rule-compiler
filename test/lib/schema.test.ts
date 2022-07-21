@@ -9,7 +9,7 @@ describe("Ajv schema", () => {
       logger: globalThis.debugMode ? { error: console.error, warn: console.warn, log: console.log } : undefined,
     });
 
-    expect(ajv.validateSchema(schema)).toBe(true);
+    expect(ajv.validateSchema(schema, true)).toBe(true);
   });
 });
 
@@ -21,6 +21,6 @@ describe("Ajv defs schema", () => {
       logger: globalThis.debugMode ? { error: console.error, warn: console.warn, log: console.log } : undefined,
     });
 
-    expect(ajv.validateSchema(defsSchema)).toBe(true);
+    expect(ajv.validateSchema(defsSchema, true)).toBe(true);
   });
 });
