@@ -1,6 +1,6 @@
 # Firestore Rule Compiler
 
-Firestore rules can be complicated to work with and quickly get repetitive and verbose. However, to properly secure and structure a Firestore database they are essential. That's where the Rule Compiler comes in. You write a model in JSON that matches the [schema](https://raw.githubusercontent.com/tajetaje/firestore-rule-compiler/main/src/lib/schema.json), pass it through the compiler and use the resulting rules file.
+Firestore rules can be complicated to work with and quickly get repetitive and verbose. However, to properly secure and structure a Firestore database they are essential. That's where the Rule Compiler comes in. You write a model in JSON that matches the [schema](https://raw.githubusercontent.com/tajetaje/firestore-rule-compiler/main/src/lib/model.schema.json), pass it through the compiler and use the resulting rules file.
 
 ## Features
 
@@ -36,7 +36,7 @@ To get autocomplete for ".rules.json" files in VSCode add the following to your 
       "fileMatch": [
         "*.rules.json"
       ],
-      "url": "https://raw.githubusercontent.com/tajetaje/firestore-rule-compiler/main/src/lib/schema.json"
+      "url": "https://raw.githubusercontent.com/tajetaje/firestore-rule-compiler/main/src/lib/model.schema.json"
     }
   ]
 ```
