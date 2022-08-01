@@ -92,8 +92,8 @@ describe("AllowRule", () => {
         "A String",
         "!(A == B)",
         "request.auth != null",
-        "request.auth.token.ClaimA == ValueA",
-        "request.auth.token.ClaimB != null"
+        "request.auth.token['ClaimA'] == \"ValueA\"",
+        "request.auth.token['ClaimB'] != null"
       ]
     });
   });
